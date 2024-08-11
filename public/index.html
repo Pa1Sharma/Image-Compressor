@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Compressor</title>
+    <style>
+        h1 {
+            text-align: center;
+            background-color: rgb(255, 153, 0); 
+            padding: 10px; /* Optional: to add some padding around the text */
+        }
+        h2 {
+            text-align: center;
+            background-color: rgb(255, 234, 0); 
+        }
+        .body {
+            color: #1dc6c0e8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Compressor</h1>
+    <form id="uploadForm">
+        <input type="file" id="imageInput" accept="image/*" required>
+        <button type="submit" style="background-color: rgb(0, 153, 255); color: white;">Compress Image</button>    </form>
+    <div id="result" style="display:none;">
+        <h2>Compressed Image</h2>
+        <img id="compressedImage" src="" alt="Compressed Image">
+        <a id="downloadLink" href="" download="compressed.jpg">Download Compressed Image</a>
+    </div>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData();
+            const imageFile = document.getElementById('imageInput').files[0];
+            formData.append('image', imageFile);
+
+            const response = await fetch('/compress', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.url) {
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('compressedImage').src = data.url;
+                document.getElementById('downloadLink').href = data.url;
+            }
+        });
+    </script>
+</body>
+</html>
